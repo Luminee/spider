@@ -41,13 +41,14 @@ class CaptureRpcRepo extends Command
      */
     public function handle()
     {
-        $Repos_Dir = 'D:\Vanthink\rpc_server\app\Repositories';
+        $Repos_Dir = env('RPC_DIR').'\app\Repositories';
         $Repos     = scandir($Repos_Dir);
+        $bar       = $this->output->createProgressBar(count($Repos));
         foreach ($Repos as $repo) {
             if ($repo == '.' or $repo == '..' or $repo == '_BaseRepository.php') {
+                $bar->advance();
                 continue;
             }
-            $this->info($repo);
             $repo_file = file_get_contents($Repos_Dir.'\\'.$repo, FILE_USE_INCLUDE_PATH);
             preg_match('/(namespace [a-zA-Z\\\\ ]+;)[\s\S]*(class [a-zA-Z]+ )/i', $repo_file, $matches);
             $repo_file  = str_replace(array_shift($matches), '', $repo_file);
@@ -65,7 +66,9 @@ class CaptureRpcRepo extends Command
             ];
             $Repo   = Repository::firstOrCreate($create);
             $this->getFunctions($repo_file, $Repo->id);
+            $bar->advance();
         }
+        $bar->finish();
     }
     
     /**

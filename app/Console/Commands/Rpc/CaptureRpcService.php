@@ -2,11 +2,8 @@
 
 namespace App\Console\Commands\Rpc;
 
-use App\Models\Rpc\DB\Model;
-use App\Models\Rpc\DB\Module;
-use App\Models\Rpc\Repo\Functions;
-use App\Models\Rpc\Repo\Repository;
 use App\Models\Rpc\Service\Api;
+use App\Models\Rpc\Repo\Repository;
 use App\Models\Rpc\Service\ApiCall;
 use App\Models\Rpc\Service\Service;
 use Illuminate\Console\Command;
@@ -44,13 +41,14 @@ class CaptureRpcService extends Command
      */
     public function handle()
     {
-        $Services_Dir = 'D:\Vanthink\rpc_server\app\Services';
+        $Services_Dir = env('RPC_DIR').'\app\Services';
         $Services     = scandir($Services_Dir);
+        $bar          = $this->output->createProgressBar(count($Services));
         foreach ($Services as $service) {
             if ($service == '.' or $service == '..' or $service == '_BaseService.php') {
+                $bar->advance();
                 continue;
             }
-            $this->info($service);
             $service_file = file_get_contents($Services_Dir.'\\'.$service, FILE_USE_INCLUDE_PATH);
             preg_match('/(namespace [a-zA-Z\\\\ ]+;)[\s\S]*class( [a-zA-Z]+ )/i', $service_file, $matches);
             $service_file = str_replace(array_shift($matches), '', $service_file);
@@ -74,7 +72,9 @@ class CaptureRpcService extends Command
             $Service = Service::firstOrCreate($create);
             unset($repos, $vars);
             $this->getFunctions($service_file, $Service->id);
+            $bar->advance();
         }
+        $bar->finish();
     }
     
     /**

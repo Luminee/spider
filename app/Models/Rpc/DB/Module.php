@@ -10,4 +10,9 @@ class Module extends BaseModel
     
     protected $fillable = ['code', 'label'];
     
+    public function model_list()
+    {
+        return $this->hasMany('App\Models\Rpc\DB\Model', 'module_id', 'id');
+    }
+    
 }

@@ -40,18 +40,19 @@ class CaptureRpcDB extends Command
      */
     public function handle()
     {
-        $Models_Dir = 'D:\Vanthink\rpc_server\app\Models';
+        $Models_Dir = env('RPC_DIR').'\app\Models';
         $Modules    = scandir($Models_Dir);
+        $bar        = $this->output->createProgressBar(count($Modules));
         foreach ($Modules as $module) {
             if ($module == '.' or $module == '..' or !is_dir($Models_Dir.'\\'.$module)) {
+                $bar->advance();
                 continue;
             }
-            $this->info($module);
             $Module  = Module::firstOrCreate(['code' => $module]);
             $Models  = scandir($Models_Dir.'\\'.$module);
             $_models = require_once $Models_Dir.'\\'.$module.'\\_models.php';
             foreach ($Models as $model) {
-                if ($model == '.' or $model == '..' or $model == '_models.php' or $model == '_RelatedLabel.php') {
+                if ($model == '.' or $model == '..' or strstr($model, '_')) {
                     continue;
                 }
                 $model_file = file_get_contents($Models_Dir.'\\'.$module.'\\'.$model, FILE_USE_INCLUDE_PATH);
@@ -93,7 +94,9 @@ class CaptureRpcDB extends Command
                 $Model            = Model::firstOrCreate($model_create);
                 $this->getRelation($model_file, $Model->id);
             }
+            $bar->advance();
         }
+        $bar->finish();
     }
     
     /**
