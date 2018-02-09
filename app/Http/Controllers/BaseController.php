@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rpc as Rpc;
+use App\Models\TcpServer;
 
 class BaseController extends Controller
 {
@@ -23,6 +24,8 @@ class BaseController extends Controller
             'api' => Rpc\Service\Api::class,
             'call' => Rpc\Service\ApiCall::class,
             'service' => Rpc\Service\Service::class,
+            
+            'server' => TcpServer::class,
         ];
     }
     
@@ -48,61 +51,61 @@ class BaseController extends Controller
     
     protected function with($relation)
     {
-        $this->_model->with($relation);
+        $this->_model = $this->_model->with($relation);
         return $this;
     }
     
     protected function selectRaw($query, Array $param = [])
     {
-        $this->_model->selectRaw($query, $param);
+        $this->_model = $this->_model->selectRaw($query, $param);
         return $this;
     }
     
     protected function innerJoin($table, $one, $operator, $two)
     {
-        $this->_model->join($table, $one, $operator, $two);
+        $this->_model = $this->_model->join($table, $one, $operator, $two);
         return $this;
     }
     
     protected function whereField($field, $value, $equal = null)
     {
-        $this->_model->where($field, $equal, $value);
+        $this->_model = $this->_model->where($field, $equal, $value);
         return $this;
     }
     
     protected function whereBetween($field, array $valueArray)
     {
-        $this->_model->whereBetween($field, $valueArray);
+        $this->_model = $this->_model->whereBetween($field, $valueArray);
         return $this;
     }
     
     protected function whereIn($field, array $valueArray)
     {
-        $this->_model->whereIn($field, $valueArray);
+        $this->_model = $this->_model->whereIn($field, $valueArray);
         return $this;
     }
     
     protected function whereRaw($query, Array $param = [])
     {
-        $this->_model->whereRaw($query, $param);
+        $this->_model = $this->_model->whereRaw($query, $param);
         return $this;
     }
     
     protected function whereNull($field)
     {
-        $this->_model->whereNull($field);
+        $this->_model = $this->_model->whereNull($field);
         return $this;
     }
     
     protected function whereNotNull($field)
     {
-        $this->_model->whereNotNull($field);
+        $this->_model = $this->_model->whereNotNull($field);
         return $this;
     }
     
     protected function whereHas($relation, $field, $value, $operator = '=')
     {
-        $this->_model
+        $this->_model = $this->_model
             ->whereHas($relation, function ($query) use ($field, $value, $operator) {
                 $query->where($field, $operator, $value);
             });
@@ -111,13 +114,13 @@ class BaseController extends Controller
     
     protected function orderBy($field, $sort = 'asc')
     {
-        $this->_model->orderBy($field, $sort);
+        $this->_model = $this->_model->orderBy($field, $sort);
         return $this;
     }
     
     protected function groupBy($field)
     {
-       $this->_model->groupBy($field);
+        $this->_model = $this->_model->groupBy($field);
         return $this;
     }
     
@@ -169,6 +172,18 @@ class BaseController extends Controller
     protected function delete()
     {
         return $this->_model->delete();
+    }
+    
+    protected function success($data = null)
+    {
+        $return = ['code' => 200, 'data' => $data];
+        return response()->json($return, 200, ['Content-type' => 'application/json; charset=utf-8']);
+    }
+    
+    protected function error($code = 500, $data = null)
+    {
+        $return = ['code' => $code, 'data' => $data];
+        return response()->json($return, 200, ['Content-type' => 'application/json; charset=utf-8']);
     }
     
 }

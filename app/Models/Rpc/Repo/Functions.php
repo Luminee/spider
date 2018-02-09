@@ -20,4 +20,9 @@ class Functions extends BaseModel
         return $this->belongsTo('App\Models\Rpc\DB\Model', 'set_model_id', 'id');
     }
     
+    public function apiCall_list()
+    {
+        return $this->hasMany('App\Models\Rpc\Service\ApiCall', 'function_id', 'id');
+    }
+    
 }

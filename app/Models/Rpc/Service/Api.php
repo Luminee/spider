@@ -15,4 +15,9 @@ class Api extends BaseModel
         return $this->belongsTo('App\Models\Rpc\Service\Service', 'service_id', 'id');
     }
     
+    public function call_list()
+    {
+        return $this->hasMany('App\Models\Rpc\Service\ApiCall', 'api_id', 'id');
+    }
+    
 }

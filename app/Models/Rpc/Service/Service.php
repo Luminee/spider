@@ -10,4 +10,9 @@ class Service extends BaseModel
     
     protected $fillable = ['code', 'class_name', 'ioc_variables', 'ioc_repos'];
     
+    public function api_list()
+    {
+        return $this->hasMany('App\Models\Rpc\Service\Api', 'service_id', 'id');
+    }
+    
 }

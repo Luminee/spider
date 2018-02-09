@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Rpc;
 
+use App\Models\Rpc\Repo\Functions;
 use App\Models\Rpc\Service\Api;
 use App\Models\Rpc\Repo\Repository;
 use App\Models\Rpc\Service\ApiCall;
@@ -122,20 +123,23 @@ class CaptureRpcService extends Command
             $string = array_shift($matches);
             list($function_name, $params) = $matches;
             $repository_id = 0;
+            $function_id   = 0;
             if (strstr($function_name, '->')) {
                 list($repo_name, $function_name) = explode('->', $function_name);
                 $service = Api::find($api_id)->service;
                 $ioc     = array_combine(explode(',', $service->ioc_variables), explode(',', $service->ioc_repos));
-                if ($repo_name == 'label' && !isset($ioc['label'])) {
-                    dd($api_id);
-                }
                 if ($repo = Repository::where('code', $ioc[$repo_name])->first()) {
                     $repository_id = $repo->id;
+                    if ($function = Functions::where('repository_id', $repository_id)
+                        ->where('function_name', $function_name)->first()) {
+                        $function_id = $function->id;
+                    }
                 }
             }
             $create = [
                 'api_id' => $api_id,
                 'repository_id' => $repository_id,
+                'function_id' => $function_id,
                 'function_name' => $function_name,
                 'params' => empty($params) ? null : str_replace(' ', '', $params)
             ];

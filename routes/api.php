@@ -1,18 +1,40 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::namespace('Rpc')->group(function () {
+    Route::prefix('db')->group(function () {
+        Route::prefix('get')->group(function () {
+            
+            Route::get('modelList', 'DBController@getModelList');
+            
+            Route::post('modelInfo', 'DBController@getModelInfo');
+        });
+    });
+    
+    Route::prefix('repo')->group(function () {
+        Route::prefix('get')->group(function () {
+            
+            Route::get('repositoryList', 'RepoController@getRepositoryList');
+            
+            Route::post('repositoryInfo', 'RepoController@getRepositoryInfo');
+            
+            Route::post('functionInfo', 'RepoController@getFunctionInfo');
+        });
+    });
+    
+    Route::prefix('service')->group(function () {
+        Route::prefix('get')->group(function () {
+            
+            Route::get('serviceList', 'ServiceController@getServiceList');
+            
+            Route::post('serviceInfo', 'ServiceController@getServiceInfo');
+            
+            Route::post('apiInfo', 'ServiceController@getApiInfo');
+            
+            Route::post('callInfo', 'ServiceController@getCallInfo');
+        });
+    });
 });
+
+

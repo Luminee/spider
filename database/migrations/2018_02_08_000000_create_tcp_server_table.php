@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRpcServiceServiceApiCallTable extends Migration
+class CreateTcpServerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateRpcServiceServiceApiCallTable extends Migration
      */
     public function up()
     {
-        Schema::create('rpc_service_service_api_call', function (Blueprint $table) {
+        Schema::create('tcp_server', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('api_id');
-            $table->integer('repository_id');
-            $table->integer('function_id');
-            $table->string('function_name');
-            $table->string('params')->nullable();
+            $table->string('alias');
+            $table->string('class_name');
+            $table->integer('instance_id');
+            $table->string('instance_type');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateRpcServiceServiceApiCallTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rpc_service_service_api_call');
+        Schema::dropIfExists('tcp_server');
     }
 }

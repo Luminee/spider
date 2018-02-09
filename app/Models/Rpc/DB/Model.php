@@ -15,4 +15,14 @@ class Model extends BaseModel
         return $this->belongsTo('App\Models\Rpc\DB\Module', 'module_id', 'id');
     }
     
+    public function relation_list()
+    {
+        return $this->hasMany('App\Models\Rpc\DB\Relation', 'model_id', 'id');
+    }
+    
+    public function repo_function_list()
+    {
+        return $this->hasMany('App\Models\Rpc\Repo\Functions', 'set_model_id', 'id');
+    }
+    
 }

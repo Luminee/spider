@@ -52,7 +52,7 @@ class CaptureRpcRepo extends Command
             $repo_file = file_get_contents($Repos_Dir.'\\'.$repo, FILE_USE_INCLUDE_PATH);
             preg_match('/(namespace [a-zA-Z\\\\ ]+;)[\s\S]*(class [a-zA-Z]+ )/i', $repo_file, $matches);
             $repo_file  = str_replace(array_shift($matches), '', $repo_file);
-            $class_name = str_replace(['namespace', 'class', ';', ' '], '', implode('\\', $matches));
+            $class_name = str_replace(['namespace', 'class ', ';', ' '], '', implode('\\', $matches));
             preg_match('/\$this->bindModule\(\'([a-zA-Z]+)\'\);/i', $repo_file, $matches);
             if (empty($matches)) {
                 $module_id = 0;
@@ -87,7 +87,10 @@ class CaptureRpcRepo extends Command
             list($modifier, $function_name, $params) = $matches;
             preg_match('/->setModel\([\'"]([a-zA-Z_]+)[\'"]\)/i', $string, $matches);
             if (!empty($matches)) {
-                $set_model_id = Model::where('alias', $matches[1])->orderBy('created_at', 'desc')->first()->id;
+                $module_id    = Repository::find($repository_id)->module_id;
+                $model        = Model::where('alias', $matches[1])->where('module_id', $module_id)
+                    ->orderBy('created_at', 'desc')->first();
+                $set_model_id = empty($model) ? 0 : $model->id;
             } else {
                 $set_model_id = 0;
             }

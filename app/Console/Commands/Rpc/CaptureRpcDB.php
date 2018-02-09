@@ -115,6 +115,12 @@ class CaptureRpcDB extends Command
             list($relation, $type, $related_model) = $matches;
             $related = explode(',', str_replace(['\'', '"', ' '], '', $related_model));
             $model   = array_shift($related);
+            if (!strstr($model, '_')) {
+                $related_id = Model::where('class_name', $model)->first()->id;
+            } else {
+                $related_id = 0;
+            }
+            
             if ($type == 'belongsTo') {
                 $local_key   = array_shift($related);
                 $foreign_key = empty($related) ? null : array_shift($related);
@@ -127,6 +133,7 @@ class CaptureRpcDB extends Command
                 'model_id' => $model_id,
                 'relate_type' => $type,
                 'related_model' => $model,
+                'related_model_id' => $related_id,
                 'foreign_key' => $foreign_key,
                 'local_key' => $local_key
             ];

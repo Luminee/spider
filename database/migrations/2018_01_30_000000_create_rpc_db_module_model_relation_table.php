@@ -19,6 +19,7 @@ class CreateRpcDbModuleModelRelationTable extends Migration
             $table->integer('model_id');
             $table->string('relate_type');
             $table->string('related_model');
+            $table->integer('related_model_id');
             $table->string('foreign_key')->nullable();
             $table->string('local_key')->nullable();
             $table->timestamps();

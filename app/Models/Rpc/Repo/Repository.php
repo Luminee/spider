@@ -15,4 +15,9 @@ class Repository extends BaseModel
         return $this->belongsTo('App\Models\Rpc\DB\Module', 'module_id', 'id');
     }
     
+    public function functions_list()
+    {
+        return $this->hasMany('App\Models\Rpc\Repo\Functions', 'repository_id', 'id');
+    }
+    
 }
