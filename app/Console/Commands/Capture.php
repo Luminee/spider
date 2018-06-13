@@ -42,13 +42,30 @@ class Capture extends Command
             return;
         }
         $commands = [
-            'capture:rpc:db' => 'Rpc -> DB',
-            'capture:rpc:repo' => 'Rpc -> Repo',
-            'capture:rpc:service' => 'Rpc -> Service',
+            [
+                'comm' => 'capture:rpc:db',
+                'desc' => 'Rpc -> DB',
+                'args' => [],
+            ],
+            [
+                'comm' => 'capture:rpc:db',
+                'desc' => 'Rpc -> DB with Relate',
+                'args' => ['--relate' => true],
+            ],
+            [
+                'comm' => 'capture:rpc:repo',
+                'desc' => 'Rpc -> Repo',
+                'args' => [],
+            ],
+            [
+                'comm' => 'capture:rpc:service',
+                'desc' => 'Rpc -> Service',
+                'args' => [],
+            ],
         ];
-        foreach ($commands as $command => $description) {
-            $this->info('Capturing '.$description);
-            $this->call($command);
+        foreach ($commands as $command) {
+            $this->info('Capturing '.$command['desc']);
+            $this->call($command['comm'], $command['args']);
             $this->info('');
         }
     }

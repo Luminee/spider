@@ -23,7 +23,7 @@ class RepoController extends BaseController
     public function getFunctionInfo(Request $request)
     {
         $function_id = $request->input('function_id');
-        $function    = $this->setModel('functions')->with(['apiCall_list', 'repository', 'setModel'])->find($function_id);
+        $function    = $this->setModel('functions')->with(['apiCall_list.api', 'repository', 'setModel'])->find($function_id);
         return $this->success(compact('function'));
     }
     

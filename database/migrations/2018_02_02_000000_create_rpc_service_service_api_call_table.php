@@ -19,7 +19,7 @@ class CreateRpcServiceServiceApiCallTable extends Migration
             $table->integer('repository_id');
             $table->integer('function_id');
             $table->string('function_name');
-            $table->string('params')->nullable();
+            $table->text('params')->nullable();
             $table->timestamps();
         });
     }

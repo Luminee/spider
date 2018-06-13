@@ -14,7 +14,7 @@ class CaptureRpcDB extends Command
      *
      * @var string
      */
-    protected $signature = 'capture:rpc:db';
+    protected $signature = 'capture:rpc:db {--relate}';
     
     /**
      * The console command description.
@@ -50,7 +50,7 @@ class CaptureRpcDB extends Command
             }
             $Module  = Module::firstOrCreate(['code' => $module]);
             $Models  = scandir($Models_Dir.'\\'.$module);
-            $_models = require_once $Models_Dir.'\\'.$module.'\\_models.php';
+            $_models = require $Models_Dir.'\\'.$module.'\\_models.php';
             foreach ($Models as $model) {
                 if ($model == '.' or $model == '..' or strstr($model, '_')) {
                     continue;
@@ -92,7 +92,7 @@ class CaptureRpcDB extends Command
                     'use_soft_deletes' => $use_soft_deletes
                 ];
                 $Model            = Model::firstOrCreate($model_create);
-                $this->getRelation($model_file, $Model->id);
+                if ($this->option('relate')) $this->getRelation($model_file, $Model->id);
             }
             $bar->advance();
         }
