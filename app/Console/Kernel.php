@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         = [
             Commands\Capture::class,
             Commands\CaptureTcpServer::class,
+            Commands\BuildDbWiki::class,
             
             Commands\Rpc\CaptureRpcDB::class,
             Commands\Rpc\CaptureRpcRepo::class,

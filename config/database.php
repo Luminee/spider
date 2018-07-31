@@ -54,6 +54,18 @@ return [
             'engine' => null,
         ],
 
+        'dev' => [
+            'driver'    => 'mysql',
+            'host'      => '172.17.0.16',
+            'database'  => 'b_vanthink_core',
+            'username'  => 'tmp',
+            'password'  => 'mysql#0056',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
